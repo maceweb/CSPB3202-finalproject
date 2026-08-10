@@ -1,0 +1,29 @@
+===== Baseline DQN Evaluation =====
+
+Training episodes: 500
+
+Average reward: -79.06
+Average steps: 80.06
+Success rate: 100.00%
+
+===== Random Agent Baseline =====
+
+Average reward: -498.81
+Average steps: 498.82
+
+===== Baseline DQN Parameters =====
+
+Learning rate: 0.001
+Gamma: 0.99
+Batch size: 64
+Replay buffer capacity: 10000
+Initial epsilon: 1.0
+Minimum epsilon: 0.05
+Epsilon decay: 0.995
+
+Network:
+Input: 6
+Hidden: 128
+Hidden: 128
+Output: 3
+

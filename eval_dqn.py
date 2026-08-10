@@ -13,15 +13,28 @@ action_size = env.action_space.n
 
 
 # Create the DQN
-model = DQN(state_size, action_size)
+model = DQN(state_size, action_size,learning_rate=0.0005)
 
 # Load the trained model
 model.load_state_dict(
     torch.load(
-        "results/dqn_model.pth",
+        "results/experiments/lr_0005/dqn_model.pth",
         weights_only=True
     )
 )
+print("Model loaded successfully.")
+
+print("\nTest Q-values:")
+
+test_observation, info = env.reset()
+
+test_state = torch.tensor(
+    test_observation,
+    dtype=torch.float32
+)
+
+with torch.no_grad():
+    print(model(test_state))
 
 # Put the model in evaluation mode
 model.eval()

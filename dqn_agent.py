@@ -5,7 +5,7 @@ import torch.optim as optim
 ##create the neural network
 class DQN(nn.Module):
 
-    def __init__(self, state_size, action_size):
+    def __init__(self, state_size, action_size, learning_rate=0.001):
         super().__init__()
 
         self.network = nn.Sequential(
@@ -23,7 +23,7 @@ class DQN(nn.Module):
         )
         self.optimizer = optim.Adam(
             self.parameters(),
-            lr=0.001
+            lr=learning_rate
         )
 
     def forward(self, state):

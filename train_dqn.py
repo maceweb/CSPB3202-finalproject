@@ -23,7 +23,7 @@ buffer_capacity = 10000
 
 # DQN parameters
 gamma = 0.99
-learning_rate = 0.001
+learning_rate = 0.0005
 
 
 # Exploration parameters
@@ -33,7 +33,7 @@ epsilon_decay = 0.995
 
 
 # Create the DQN
-model = DQN(state_size, action_size)
+model = DQN(state_size, action_size,learning_rate=learning_rate)
 
 
 # Create the replay buffer
@@ -141,7 +141,7 @@ for episode in range(num_episodes):
 # Close environment
 env.close()
 # Save training results to a CSV file
-with open("results/dqn_results.csv", "w", newline="") as file:
+with open("results/experiments/lr_0005/dqn_results.csv", "w", newline="") as file:
 
     writer = csv.writer(file)
 
@@ -167,7 +167,7 @@ print("\nTraining results saved to results/dqn_results.csv")
 # Save the trained DQN
 torch.save(
     model.state_dict(),
-    "results/dqn_model.pth"
+    "results/experiments/lr_0005/dqn_model.pth"
 )
 
 print("Trained DQN saved to results/dqn_model.pth")
