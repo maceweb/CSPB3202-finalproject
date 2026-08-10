@@ -13,12 +13,12 @@ action_size = env.action_space.n
 
 
 # Create the DQN
-model = DQN(state_size, action_size,learning_rate=0.0005)
+model = DQN(state_size, action_size)
 
 # Load the trained model
 model.load_state_dict(
     torch.load(
-        "results/experiments/lr_0005/dqn_model.pth",
+        "results/experiments/epsilon_decay/dqn_model.pth",
         weights_only=True
     )
 )
