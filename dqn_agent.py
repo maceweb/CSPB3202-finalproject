@@ -50,38 +50,38 @@ class DQN(nn.Module):
         Update the DQN using a batch of experiences.
         """
 
-        # Separate the experiences
+        #separate the experiences
         states, actions, rewards, next_states, dones = zip(*batch)
 
-        # Convert everything into PyTorch tensors
+        #convert everything into PyTorch tensors
         states = torch.tensor(states, dtype=torch.float32)
         actions = torch.tensor(actions, dtype=torch.long)
         rewards = torch.tensor(rewards, dtype=torch.float32)
         next_states = torch.tensor(next_states, dtype=torch.float32)
         dones = torch.tensor(dones, dtype=torch.float32)
 
-        # Get Q-values for the actions that were actually taken
+        #get Q-values for the actions that were actually taken
         current_q_values = self(states).gather(
             1, actions.unsqueeze(1)
         ).squeeze(1)
 
-        # Calculate the best Q-value for the next states
+        #calculate the best Q-value for the next states
         with torch.no_grad():
             next_q_values = self(next_states).max(1)[0]
 
-            # If the episode ended, there is no future reward
+            #if the episode ended, there is no future reward
             target_q_values = rewards + gamma * next_q_values * (1 - dones)
 
-        # Calculate the difference between our prediction and target
+        #calculate the difference between our prediction and target
         loss = nn.MSELoss()(current_q_values, target_q_values)
 
-        # Clear old gradients
+        #clear old gradients
         self.optimizer.zero_grad()
 
-        # Calculate gradients
+        #calculate gradients
         loss.backward()
 
-        # Update the network weights
+        #update the network weights
         self.optimizer.step()
 
         return loss.item()
@@ -155,13 +155,10 @@ if __name__ == "__main__":
 
         print("Actions:", actions)
 
-    # -----------------------------
-    # Test the learning function
-    # -----------------------------
-
+##test
     print("\n===== Testing Learning =====")
 
-    # Create a small batch of fake experiences
+##fake test
     batch = [
         (
             observation,
@@ -186,19 +183,19 @@ if __name__ == "__main__":
         )
     ]
 
-    # Get Q-values before learning
+    #get Q-values before learning
     state = torch.tensor(observation, dtype=torch.float32)
 
     print("\nQ-values before learning:")
     print(model(state))
 
-    # Train on the fake experiences
+    #train on the fake experiences
     loss = model.learn(batch)
 
     print("\nLoss:")
     print(loss)
 
-    # Get Q-values after learning
+    #get Q-values after learning
     print("\nQ-values after learning:")
     print(model(state))
     env.close()

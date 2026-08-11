@@ -6,53 +6,51 @@ from dqn_agent import DQN
 from replay_buffer import ReplayBuffer
 
 
-# Create the Acrobot environment
+#create the Acrobot environment
 env = gym.make("Acrobot-v1")
 
 
-# Acrobot dimensions
+#acrobot dimensions
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 
 
-# Training parameters
-num_episodes = 500
+#training parameters
+num_episodes = 200
 batch_size = 64
 buffer_capacity = 10000
 
 
-# DQN parameters
+#DQN parameters
 gamma = 0.99
 learning_rate = 0.001
 
 
-# Exploration parameters
+#exploration parameters
 epsilon = 1.0
 epsilon_min = 0.05
-epsilon_decay = 0.99
+epsilon_decay = 0.995
 
 
-# Create the DQN
+#create the DQN
 model = DQN(state_size, action_size,learning_rate=learning_rate)
 
 
-# Create the replay buffer
+#create the replay buffer
 replay_buffer = ReplayBuffer(buffer_capacity)
 
 
-# Store training results
+#store training results
 episode_rewards = []
 episode_steps = []
 episode_losses = []
 
 
-# =========================
-# Training loop
-# =========================
+#training loops
 
 for episode in range(num_episodes):
 
-    # Reset the environment
+    #reset the environment
     observation, info = env.reset()
 
     total_reward = 0
@@ -61,25 +59,25 @@ for episode in range(num_episodes):
 
     while True:
 
-        # Convert state to a tensor
+        #convert state to a tensor
         state = torch.tensor(
             observation,
             dtype=torch.float32
         )
 
-        # Choose an action
+        #choose an action
         action = model.choose_action(
             state,
             epsilon
         )
 
-        # Take the action
+        #take the action
         next_observation, reward, terminated, truncated, info = env.step(action)
 
-        # Check if episode is finished
+        #check if episode is finished
         done = terminated or truncated
 
-        # Store experience in replay buffer
+        #store experience in replay buffer
         replay_buffer.add(
             observation,
             action,
@@ -88,11 +86,11 @@ for episode in range(num_episodes):
             done
         )
 
-        # Update statistics
+        #update statistics
         total_reward += reward
         steps += 1
 
-        # Train if we have enough experiences
+        #train if we have enough experiences
         if len(replay_buffer) >= batch_size:
 
             batch = replay_buffer.sample(batch_size)
@@ -104,20 +102,20 @@ for episode in range(num_episodes):
 
             losses.append(loss)
 
-        # Move to the next state
+        #move to the next state
         observation = next_observation
 
-        # End episode
+        #end episode
         if done:
             break
 
-    # Reduce exploration over time
+    #reduce exploration over time
     epsilon = max(
         epsilon_min,
         epsilon * epsilon_decay
     )
 
-    # Save results
+    #save results
     episode_rewards.append(total_reward)
     episode_steps.append(steps)
 
@@ -128,7 +126,7 @@ for episode in range(num_episodes):
 
     episode_losses.append(average_loss)
 
-    # Print results
+    #print results
     print(
         f"Episode {episode + 1}/{num_episodes} | "
         f"Reward: {total_reward:.0f} | "
@@ -138,14 +136,14 @@ for episode in range(num_episodes):
     )
 
 
-# Close environment
+# close environment
 env.close()
-# Save training results to a CSV file
-with open("results/experiments/epsilon_decay/dqn_results.csv", "w", newline="") as file:
+#save training results to a CSV file
+with open("results/experiments/more_episodes/dqn_results.csv", "w", newline="") as file:
 
     writer = csv.writer(file)
 
-    # Column names
+    # column names
     writer.writerow([
         "episode",
         "reward",
@@ -153,7 +151,7 @@ with open("results/experiments/epsilon_decay/dqn_results.csv", "w", newline="") 
         "loss"
     ])
 
-    # Write each episode's results
+    # write each episode's results
     for i in range(num_episodes):
         writer.writerow([
             i + 1,
@@ -164,10 +162,10 @@ with open("results/experiments/epsilon_decay/dqn_results.csv", "w", newline="") 
 
 print("\nTraining results saved to results/dqn_results.csv")
 
-# Save the trained DQN
+# save the trained DQN
 torch.save(
     model.state_dict(),
-    "results/experiments/epsilon_decay/dqn_model.pth"
+    "results/experiments/more_episodes/dqn_model.pth"
 )
 
 print("Trained DQN saved to results/dqn_model.pth")

@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load results
-df = pd.read_csv("results/dqn_results.csv")
+df = pd.read_csv("results/experiments/more_episodes/dqn_results.csv")
 
 
 # =========================
